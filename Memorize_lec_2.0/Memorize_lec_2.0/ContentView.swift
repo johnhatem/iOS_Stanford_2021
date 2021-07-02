@@ -25,38 +25,8 @@ struct ContentView: View {
                 }
             }
             .foregroundColor(.red)
-            Spacer()
-            HStack{
-                remove
-                Spacer()
-                add
-            }
-            .font(.largeTitle)
-            .padding(.horizontal)
         }
         .padding(.horizontal)
-
-        
-    }
-    
-    var remove: some View {
-        Button { //Compact way of writing a Button
-            if emojiCount > 1 {
-                emojiCount -= 1
-            }
-        } label: {
-            Image(systemName: "minus.circle")
-        }
-    }
-    
-    var add: some View {
-        Button(action: {
-            if emojiCount < emojis.count {
-                emojiCount += 1
-            }
-        }, label: {
-           Image(systemName: "plus.circle")
-        })
     }
     
 }
@@ -94,7 +64,7 @@ struct ContentView_Previews: PreviewProvider {
         Group {
             
             ContentView()
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(.light)
 
         }
     }
