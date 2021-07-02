@@ -8,24 +8,23 @@
 import SwiftUI
 
 struct ContentView: View {
+    // @ObservedObject: means that every time the viewModel changes (which is the ObservableObject), redraw the View.
+    @ObservedObject var viewModel: EmojiMemoryGame
     
-    var emojis: [String] = ["🚂", "🚀", "✈️", "🚁", "🚗", "🚌", "🚜", "🛶", "🚔", "🚑",
-                            "🚚", "🚲", "🛺", "🚈", "🚢", "🚤", "⛵️", "🚒", "🏎", "🚟"]
-    
-    @State var emojiCount: Int = 20
-
     var body: some View {
-        VStack{
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 85))]) {
-                    ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
-                        CardView(content: emoji)
-                            .aspectRatio(2/3, contentMode: .fit)
-                    }
+        ScrollView {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 85))]) {
+                ForEach(viewModel.cards) { card in
+                    CardView(card: card)
+                        .aspectRatio(2/3, contentMode: .fit)
+                        .onTapGesture { //express user intent to choose a card
+                            viewModel.choose(card)
+                        }
+                    
                 }
             }
-            .foregroundColor(.red)
         }
+        .foregroundColor(.red)
         .padding(.horizontal)
     }
     
@@ -34,22 +33,20 @@ struct ContentView: View {
 
 
 struct CardView: View {
-    var content: String
-    @State var isFaceUp: Bool = true
+    let card: MemoryGame<String>.Card
     
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 20)
-            if isFaceUp {
+            if card.isFaceUp {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3)
-                Text(content).font(.largeTitle)
+                Text(card.content).font(.largeTitle)
+            } else if card.isMatched {
+                shape.opacity(0)
             } else {
                 shape.fill()
             }
-        }
-        .onTapGesture {
-            isFaceUp = !isFaceUp
         }
     }
 }
@@ -61,11 +58,13 @@ struct CardView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
+        let game = EmojiMemoryGame()
+        
         Group {
             
-            ContentView()
+            ContentView(viewModel: game)
                 .preferredColorScheme(.light)
-
+            
         }
     }
 }

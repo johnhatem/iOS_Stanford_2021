@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct Memorize_lec_2_0App: App {
+    // using 'let' here does not mean that the game will not change. EmojiMemoryGame is a class, with let the reference (or pointer) to the game will not change but the game itself can and will change.
+    let game = EmojiMemoryGame()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(viewModel: game)
         }
     }
 }

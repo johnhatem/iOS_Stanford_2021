@@ -5,15 +5,13 @@
 //  Created by John Hatem on 24/06/2021.
 //
 
-/*
-    This is the ViewModel in MVVM. It is not the View, BUT it is part of the UI (which is why it can and needs to import SwiftUI
- 
-    The ViewModel plays the role of the Gate Keeper.
- */
+// This is the ViewModel in MVVM. It is not the View, BUT it is part of the UI (which is why it can and needs to import SwiftUI
+// The ViewModel plays the role of the Gate Keeper.
+// ObservableObject: the ObservableObject publishes to the world that something has changed. Classes that conform to this will get a default var called objectWillChange
 
 import SwiftUI
 
-class EmojiMemoryGame {
+class EmojiMemoryGame: ObservableObject {
     // This static constant is also called type variable or type constant
     static let emojis: [String] = ["🚂", "🚀", "✈️", "🚁", "🚗", "🚌", "🚜", "🛶", "🚔", "🚑",
                             "🚚", "🚲", "🛺", "🚈", "🚢", "🚤", "⛵️", "🚒", "🏎", "🚟"]
@@ -33,9 +31,16 @@ class EmojiMemoryGame {
     
 
     // connection to the MODEL
-    private var model: MemoryGame<String> = createMemoryGame()
+    // @Published: Every time the model is changed, it will call 'objectWillChange.send()' to notify the View that a redraw is required
+    @Published private var model: MemoryGame<String> = createMemoryGame()
     
     var cards: Array<MemoryGame<String>.Card> {
         return model.cards
     }
+    
+    // MARK: - Intent(s)
+    func choose(_ card: MemoryGame<String>.Card) {
+        model.choose(card)
+    }
+    
 }
