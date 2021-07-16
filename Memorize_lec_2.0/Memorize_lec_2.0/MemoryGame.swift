@@ -6,7 +6,7 @@
 //
 
 /*
-    This is the MODEL of MVVM
+ This is the MODEL of MVVM
  */
 
 import Foundation
@@ -14,10 +14,13 @@ import Foundation
 struct MemoryGame<CardContent> where CardContent: Equatable {
     private(set) var cards: Array<Card>
     
-    private var indexOfTheOneAndOnlyFaceUpCard: Int?
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
+        get { cards.indices.filter{ cards[$0].isFaceUp }.oneAndOnly }
+        set { cards.indices.forEach{ cards[$0].isFaceUp = ($0 == newValue) } }
+    }
     
     init(numberOfPairsOfCards: Int, createCardContent: (Int) -> CardContent) {
-        cards = Array<Card>()
+        cards = [] // [] is equivalent to writing Array<Card>()
         for pairIndex in 0..<numberOfPairsOfCards {
             let content = createCardContent(pairIndex)
             cards.append(Card(content: content, id:pairIndex*2))
@@ -35,18 +38,13 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
                     cards[chosenIndex].isMatched = true
                     cards[potentialMatchIndex].isMatched = true
                 }
-                indexOfTheOneAndOnlyFaceUpCard = nil
+                cards[chosenIndex].isFaceUp = true
             } else {
-                for index in cards.indices { // for index in 0..<cards.count
-                    cards[index].isFaceUp = false
-                }
                 indexOfTheOneAndOnlyFaceUpCard = chosenIndex
             }
-            
-            cards[chosenIndex].isFaceUp.toggle()
         }
     }
-        
+    
     
     /*:
      - Note:
@@ -55,9 +53,20 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
      We do this, because by NESTING Card in MemoryGame, we will know that the card we use is a memory game card and not poker cards for example.
      */
     struct Card: Identifiable {
-        var isFaceUp: Bool = false
-        var isMatched: Bool = false
-        var content: CardContent // We can use String as the content type since we will use emojis. But we want the MemoryGame to be UI independent so we use a don't-care type.
-        var id: Int //This var is required to conform to Identifiable protocol
+        var isFaceUp = true
+        var isMatched = false
+        let content: CardContent // We can use String as the content type since we will use emojis. But we want the MemoryGame to be UI independent so we use a don't-care type.
+        let id: Int //This var is required to conform to Identifiable protocol
+    }
+}
+
+
+extension Array {
+    var oneAndOnly: Element? {
+        if self.count == 1 {
+            return self.first
+        } else {
+            return nil
+        }
     }
 }

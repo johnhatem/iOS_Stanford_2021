@@ -12,12 +12,15 @@
 import SwiftUI
 
 class EmojiMemoryGame: ObservableObject {
+    
+    typealias Card = MemoryGame<String>.Card
+    
     // This static constant is also called type variable or type constant
-    static let emojis: [String] = ["🚂", "🚀", "✈️", "🚁", "🚗", "🚌", "🚜", "🛶", "🚔", "🚑",
+    private static let emojis: [String] = ["🚂", "🚀", "✈️", "🚁", "🚗", "🚌", "🚜", "🛶", "🚔", "🚑",
                             "🚚", "🚲", "🛺", "🚈", "🚢", "🚤", "⛵️", "🚒", "🏎", "🚟"]
     
     // This is also called type function (It's a function on the type and not on instances of this type)
-    static func createMemoryGame() -> MemoryGame<String> {
+    private static func createMemoryGame() -> MemoryGame<String> {
         MemoryGame<String>(numberOfPairsOfCards: 4) { pairIndex in
             emojis[pairIndex] // The full name is EmojiMemoryGame.emojis (you can use the shorthand name inside another static func (type function) but you need to write the whole name inside an instance func (see example below)
         }
@@ -32,14 +35,14 @@ class EmojiMemoryGame: ObservableObject {
 
     // connection to the MODEL
     // @Published: Every time the model is changed, it will call 'objectWillChange.send()' to notify the View that a redraw is required
-    @Published private var model: MemoryGame<String> = createMemoryGame()
+    @Published private var model = createMemoryGame()
     
-    var cards: Array<MemoryGame<String>.Card> {
+    var cards: Array<Card> {
         return model.cards
     }
     
     // MARK: - Intent(s)
-    func choose(_ card: MemoryGame<String>.Card) {
+    func choose(_ card: Card) {
         model.choose(card)
     }
     
