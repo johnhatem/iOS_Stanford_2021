@@ -21,7 +21,7 @@ class EmojiMemoryGame: ObservableObject {
     
     // This is also called type function (It's a function on the type and not on instances of this type)
     private static func createMemoryGame() -> MemoryGame<String> {
-        MemoryGame<String>(numberOfPairsOfCards: 1) { pairIndex in
+        MemoryGame<String>(numberOfPairsOfCards: 10) { pairIndex in
             emojis[pairIndex] // The full name is EmojiMemoryGame.emojis (you can use the shorthand name inside another static func (type function) but you need to write the whole name inside an instance func (see example below)
         }
     }

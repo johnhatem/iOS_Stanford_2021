@@ -53,7 +53,7 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
      We do this, because by NESTING Card in MemoryGame, we will know that the card we use is a memory game card and not poker cards for example.
      */
     struct Card: Identifiable {
-        var isFaceUp = true
+        var isFaceUp = false
         var isMatched = false
         let content: CardContent // We can use String as the content type since we will use emojis. But we want the MemoryGame to be UI independent so we use a don't-care type.
         let id: Int //This var is required to conform to Identifiable protocol

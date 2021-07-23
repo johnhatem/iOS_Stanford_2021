@@ -13,11 +13,15 @@ struct EmojiMemoryGameView: View {
     
     var body: some View {
         AspectVGrid(items: game.cards, aspectRatio: 2/3, content: { card in
-            CardView(card: card)
+            if card.isMatched && !card.isFaceUp {
+                Rectangle().opacity(0)
+            } else {
+                CardView(card: card)
                 .padding(4)
                 .onTapGesture { //express user intent to choose a card
                     game.choose(card)
                 }
+            }
         })
 
         .foregroundColor(.red)
